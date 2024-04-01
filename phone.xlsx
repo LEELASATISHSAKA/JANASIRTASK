@@ -1,0 +1,32 @@
+from twilio.rest import Client
+import openpyxl
+
+# Twilio credentials
+AUTH_SID = 'AC47b88a6e50a0028bfdd1c1c234a2324d'
+AUTH_TOKEN = '021effa39da2b77ffdc21cfa8c8d1d91'
+TWILIO_PHONE_NUMBER = '+19383333943'
+
+test_mode = True
+
+message_text = 'Hello'
+
+if test_mode:
+    token = AUTH_TOKEN
+    sid = AUTH_SID
+
+client = Client(sid, token)
+
+wb = openpyxl.load_workbook("phone.xlsx")  # Modify this line with the actual full path
+sheet = wb.active  # Get the active sheet
+col = sheet['A']  # Assuming phone numbers are in column A
+
+for cell in col:
+    if test_mode:
+        print(cell.value)
+    else:
+        client.messages.create(
+            to=cell.value,
+            from_=TWILIO_PHONE_NUMBER,
+            body=message_text
+        )
+
